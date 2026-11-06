@@ -1,0 +1,66 @@
+experiment:
+  title: "DRUG-seq Novartis (2021)"
+  description: |
+    Analysis of DRUG-seq public data obtained from this paper https://pubs.acs.org/doi/10.1021/acschembio.1c00920
+  cell_line: "U2OS"
+  citation: "Subraminian et al., 2021"
+
+analysis:
+  biomart_dataset: hsapiens_gene_ensembl
+  biomart_host: https://www.ensembl.org
+  control_compound: DMSO
+  plate_format: 384
+  dmso:
+    z_thresh: 3
+    top_n: "all"
+    min_keep: 6
+    npc: 10
+    pca_weight: 1
+  de:
+    method: auto
+  quant_tool: alevin
+
+qc:
+  well:
+    enabled: TRUE
+    min_umis: 1000
+    min_genes: 200
+    min_frac_median: 0
+    method: fixed
+
+paths:
+  data_dir: /data
+  output_dir: /data
+  cache_dir: /data/_targets
+
+input_files:
+  metadata: metadata_novartis.csv
+  matrix_directory: 2026_01_23_fry_quant_cr_like
+
+filters:
+  lfc_threshold: 1
+  padj_threshold: 0.1
+
+selection:
+  contrasts: 
+    - CA-90-VK59_0.00318uM_24hr
+    - CA-90-VK59_0.01004uM_24hr
+    - CA-90-VK59_0.03174uM_24hr
+    - DB-85-YA47_0.00318uM_24hr
+    - DB-85-YA47_0.01004uM_24hr
+    - DB-85-YA47_0.03174uM_24hr
+  treatments: 
+    - CA-90-VK59
+    - DB-85-YA47
+  batches: ~
+  doses: ~
+  heatmaps:
+    top_n: 25
+    aggregate_by: concentration
+
+umap:
+  n_pca: 20
+  n_neighbors: 20
+  leiden_k: 15
+  leiden_resolution: 0.5
+  remove_batch: TRUE
